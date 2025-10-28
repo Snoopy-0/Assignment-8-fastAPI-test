@@ -1,47 +1,54 @@
 <!doctype html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>FastAPI Calculator</title>
-    <style>
-        body { font-family: system-ui, Arial, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
-        .card { border: 1px solid #ddd; border-radius: 12px; padding: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
-        label { display:block; margin-top: .75rem; }
-        input, select, button { padding: .5rem; font-size: 1rem; }
-        button { margin-top: 1rem; cursor: pointer; }
-        .result { margin-top: 1rem; font-weight: 600; }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FastAPI Calculator</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
+    label { display:block; margin-top: .75rem; }
+    input, button { padding: .5rem; font-size: 1rem; }
+    button { margin-top: .75rem; margin-right: .5rem; cursor: pointer; }
+    .result { margin-top: 1rem; font-weight: 600; }
+  </style>
 </head>
 <body>
-    <h1>FastAPI Calculator</h1>
-    <div class="card">
-        <label>First number <input id="a" type="number" step="any"></label>
-        <label>Second number <input id="b" type="number" step="any"></label>
-        <label>Operation
-            <select id="op">
-                <option value="add">Add</option>
-                <option value="subtract">Subtract</option>
-                <option value="multiply">Multiply</option>
-                <option value="divide">Divide</option>
-            </select>
-        </label>
-        <button onclick="calc()">Calculate</button>
-        <div id="out" class="result"></div>
+  <h1>Hello World</h1>
+
+  <div class="card">
+    <label>First number <input id="a" type="number" step="any" /></label>
+    <label>Second number <input id="b" type="number" step="any" /></label>
+
+    <div>
+      <button id="btn-add">Add</button>
+      <button id="btn-subtract">Subtract</button>
+      <button id="btn-multiply">Multiply</button>
+      <button id="btn-divide">Divide</button>
     </div>
-    <script>
-        async function calc(){
-            const a = parseFloat(document.getElementById('a').value);
-            const b = parseFloat(document.getElementById('b').value);
-            const op = document.getElementById('op').value;
-            const res = await fetch('/' + op, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({a, b})
-            });
-            const data = await res.json();
-            document.getElementById('out').textContent = res.ok ? ("Result: " + data.result) : ("Error: " + (data.detail || "Unknown"));
-        }
-    </script>
+
+    <div id="out" class="result"></div>
+  </div>
+
+  <script>
+    async function call(op){
+      const a = parseFloat(document.getElementById('a').value);
+      const b = parseFloat(document.getElementById('b').value);
+      const res = await fetch('/' + op, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({a, b})
+      });
+      const data = await res.json();
+      document.getElementById('out').textContent =
+        res.ok ? ('Result: ' + data.result)
+               : ('Error: ' + (data.error || data.detail || 'Unknown'));
+    }
+
+    document.getElementById('btn-add').addEventListener('click', () => call('add'));
+    document.getElementById('btn-subtract').addEventListener('click', () => call('subtract'));
+    document.getElementById('btn-multiply').addEventListener('click', () => call('multiply'));
+    document.getElementById('btn-divide').addEventListener('click', () => call('divide'));
+  </script>
 </body>
 </html>
