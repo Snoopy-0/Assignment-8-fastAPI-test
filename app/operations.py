@@ -18,5 +18,5 @@ def divide(a: float, b: float) -> float:
     logger.info("divide called with a=%s, b=%s", a, b)
     if b == 0:
         logger.error("Attempted division by zero")
-        raise ValueError("Division by zero is not allowed.")
+        raise ValueError("Cannot divide by zero!")
     return a / b

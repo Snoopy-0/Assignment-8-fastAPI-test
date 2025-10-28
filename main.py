@@ -75,7 +75,7 @@ async def divide_route(operation: Operation):
         return OperationResponse(result=result)
     except ValueError as e:
         logger.warning("Bad request on divide: %s", e)
-        raise HTTPException(status_code=400, detail=str(e))
+        return JSONResponse(status_code=400, content={"error": str(e)})
     except Exception:
         logger.exception("Divide internal error")
         raise HTTPException(status_code=500, detail="Internal Server Error")
