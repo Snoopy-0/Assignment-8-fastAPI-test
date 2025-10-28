@@ -1,10 +1,11 @@
 import threading, time, socket
 import uvicorn
-from module8_is601.main import app
 import pytest
 from playwright.sync_api import sync_playwright
+from main import app  
 
-def free_port(start=8000):
+def free_port():
+    import socket
     s = socket.socket()
     s.bind(("127.0.0.1", 0))
     port = s.getsockname()[1]
@@ -18,8 +19,7 @@ def live_server():
     server = uvicorn.Server(config)
     thread = threading.Thread(target=server.run, daemon=True)
     thread.start()
-    # Wait for server
-    time.sleep(1.0)
+    time.sleep(1.0)  # wait for server
     yield f"http://127.0.0.1:{port}"
     server.should_exit = True
     thread.join(timeout=1.0)
